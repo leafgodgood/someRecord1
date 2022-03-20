@@ -1,0 +1,128 @@
+version: "3.0"
+
+services:
+  mysql:
+    container_name: doris_mysql
+    image: daocloud.io/yjmyzz/mysql-osx:latest
+    volumes:
+      - /opt/doris_$time/mysql/db:/var/lib/mysql
+    ports:
+      - ${port_free[0]}:3306
+    expose:
+      - 9030    
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+
+  doris1:
+    container_name: doris1
+    image: apache/incubator-doris:build-env-for-0.15.0
+    restart: always
+    tty: true
+    volumes:
+      - /opt/doris_$time/doris_1_$time:/opt/doris_$time/doris_1_$time
+    ports:
+      - ${port_free[1]}:8030
+      - ${port_free[2]}:9020
+      - ${port_free[3]}:9030
+      - ${port_free[4]}:9010
+      - ${port_free[5]}:9060
+      - ${port_free[6]}:8040
+      - ${port_free[7]}:9050
+      - ${port_free[8]}:8060
+    networks:
+      extnetwork:
+        ipv4_address: 172.19.0.2
+    command: 
+        - bash
+        - -c
+        - |
+            yum -y install passwd openssl openssh-server
+            echo "123456" | passwd --stdin root
+            ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
+            ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+            ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
+            sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
+            sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config
+            /usr/sbin/sshd -D
+            tail -f /dev/null
+
+  doris2:
+    container_name: doris2
+    image: apache/incubator-doris:build-env-for-0.15.0
+    restart: always
+    tty: true   
+    volumes:
+      - /opt/doris_$time/doris_2_$time:/opt/doris_$time/doris_2_$time
+    ports:
+      - ${port_free[9]}:8030
+      - ${port_free[10]}:9020
+      - ${port_free[11]}:9030
+      - ${port_free[12]}:9010
+      - ${port_free[13]}:9060
+      - ${port_free[14]}:8040
+      - ${port_free[15]}:9050
+      - ${port_free[16]}:8060
+    networks:
+      extnetwork:
+        ipv4_address: 172.19.0.3
+    command: 
+        - bash
+        - -c
+        - |
+            yum -y install passwd openssl openssh-server
+            echo "123456" | passwd --stdin root
+            ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
+            ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+            ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
+            sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
+            sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config
+            /usr/sbin/sshd -D
+            tail -f /dev/null
+
+  doris3:
+    container_name: doris3
+    image: apache/incubator-doris:build-env-for-0.15.0
+    restart: always
+    tty: true    
+    volumes:
+      - /opt/doris_$time/doris_3_$time:/opt/doris_$time/doris_3_$time
+    ports:
+      - ${port_free[17]}:8030
+      - ${port_free[18]}:9020
+      - ${port_free[19]}:9030
+      - ${port_free[20]}:9010
+      - ${port_free[21]}:9060
+      - ${port_free[22]}:8040
+      - ${port_free[23]}:9050
+      - ${port_free[24]}:8060
+    networks:
+      extnetwork:
+        ipv4_address: 172.19.0.4
+    command: 
+        - bash
+        - -c
+        - |
+            yum -y install passwd openssl openssh-server
+            echo "123456" | passwd --stdin root
+            ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
+            ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+            ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
+            sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
+            sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config
+            /usr/sbin/sshd -D
+            tail -f /dev/null
+
+networks:
+  extnetwork:
+    ipam:
+      config:
+      - subnet: 172.19.0.0/16
+        gateway: 172.19.0.1
+
+
+
+
+
+
+
+
